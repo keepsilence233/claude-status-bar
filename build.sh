@@ -10,7 +10,7 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS"
 
 echo "Compiling…"
-swiftc -O Sources/*.swift -o "$BIN" -framework Cocoa
+swiftc -O Sources/*.swift -o "$BIN" -framework Cocoa -target arm64-apple-macosx12.0
 
 cat > "$APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -48,7 +48,7 @@ TEAM_ID="W9JZ4932LA"
 NOTARY_PROFILE="${NOTARY_PROFILE:-claude-statusbar}"
 
 SIGN_ID="$(security find-identity -v -p codesigning 2>/dev/null \
-  | grep "Developer ID Application" | grep "$TEAM_ID" | head -1 | sed -E 's/.*"(.*)"/\1/')"
+  | grep "Developer ID Application" | grep "$TEAM_ID" | head -1 | sed -E 's/.*"(.*)"/\1/' || true)"
 
 if [[ -n "$SIGN_ID" ]]; then
   echo "Signing with Developer ID: $SIGN_ID"
